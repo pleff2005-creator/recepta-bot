@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --app: #0e1621; --header: #17212b; --in: #182533; --out: #2b5278;
+    --txt: #ffffff; --sub: #7d8e9e; --time-in: #5a6b7a; --time-out: #79a7d1;
+  }
+  html, body { background: #000; font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif; }
+  .phone { width: 393px; background: var(--app); }
+
+  /* header */
+  .hdr { display: flex; align-items: center; gap: 11px; background: var(--header);
+         padding: 9px 14px; position: sticky; top: 0; }
+  .ava { width: 40px; height: 40px; border-radius: 50%; flex: none;
+         background: linear-gradient(135deg, #8a3346, #5c2531); color: #f3e7d9;
+         display: grid; place-items: center; font-size: 18px; font-weight: 700;
+         font-family: "Cormorant Garamond", Georgia, serif; }
+  .hdr .name { color: var(--txt); font-size: 15.5px; font-weight: 600; line-height: 1.2; }
+  .hdr .status { color: #64b5f6; font-size: 12.5px; margin-top: 2px; }
+  .hdr .back { color: #6d7f8f; font-size: 22px; margin-right: 2px; }
+  .hdr .dots { margin-left: auto; color: #6d7f8f; font-size: 20px; letter-spacing: 1px; }
+
+  /* chat */
+  .chat { padding: 14px 10px 8px; display: flex; flex-direction: column; gap: 8px;
+          background: var(--app);
+          background-image: radial-gradient(circle at 20% 10%, rgba(43,82,120,.10), transparent 40%),
+                            radial-gradient(circle at 80% 90%, rgba(122,45,58,.10), transparent 45%); }
+  .day { align-self: center; background: rgba(24,37,51,.85); color: #8fa2b3;
+         font-size: 12px; padding: 3px 11px; border-radius: 12px; margin: 2px 0 6px; }
+  .row { display: flex; }
+  .row.out { justify-content: flex-end; }
+  .bub { max-width: 78%; padding: 7px 11px 6px; border-radius: 14px; font-size: 14.5px;
+         line-height: 1.34; color: var(--txt); white-space: pre-wrap; position: relative;
+         word-wrap: break-word; }
+  .in .bub { background: var(--in); border-bottom-left-radius: 5px; }
+  .out .bub { background: var(--out); border-bottom-right-radius: 5px; }
+  .t { font-size: 11px; float: right; margin: 6px -3px -2px 10px; }
+  .in .t { color: var(--time-in); }
+  .out .t { color: var(--time-out); }
+  .out .t::after { content: " ✓✓"; }
+
+  /* reply keyboard */
+  .kb { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px 8px 4px; background: var(--app); }
+  .kb .btn { background: #1b2836; color: #e6edf3; font-size: 14px; text-align: center;
+             padding: 11px 8px; border-radius: 9px; }
+  .kb .wide { grid-column: 1 / -1; }
+  .composer { display: flex; align-items: center; gap: 10px; padding: 9px 14px 12px; background: var(--app); }
+  .composer .field { flex: 1; color: #55677a; font-size: 14.5px; }
+  .composer .ico { color: #6d7f8f; font-size: 19px; }
+</style>
+</head>
+<body>
+<div class="phone" id="cap">
+  <div class="hdr">
+    <span class="back">‹</span>
+    <div class="ava">В</div>
+    <div>
+      <div class="name">ВЕЛЬВЕТ — Администратор</div>
+      <div class="status">bot</div>
+    </div>
+    <span class="dots">⋮</span>
+  </div>
+
+  <div class="chat">
+    <div class="day">сегодня</div>
+
+    <div class="row in"><div class="bub">Здравствуйте! 🌿 Это администратор салона ВЕЛЬВЕТ. Помогу с записью, расскажу про услуги, цены и как нас найти. Чем могу помочь?<span class="t">21:55</span></div></div>
+
+    <div class="row out"><div class="bub">сколько стоит балаяж?<span class="t">21:56</span></div></div>
+    <div class="row in"><div class="bub">Сложное окрашивание (айртач, балаяж) — от 6500 ₽, 3–5 часов. Записать вас?<span class="t">21:56</span></div></div>
+
+    <div class="row out"><div class="bub">где вы находитесь<span class="t">21:57</span></div></div>
+    <div class="row in"><div class="bub">Мы в центре Москвы, ул. Большая Дмитровка, 12, рядом с метро Театральная. Есть бесплатная парковка во дворе.<span class="t">21:57</span></div></div>
+
+    <div class="row out"><div class="bub">запиши<span class="t">21:58</span></div></div>
+    <div class="row in"><div class="bub">Отлично! На какую услугу записать?
+Например: Женская стрижка, Окрашивание в один тон, Уход/ботокс для волос, Маникюр с покрытием, Педикюр…
+
+(«отмена» — выйти)<span class="t">21:58</span></div></div>
+
+    <div class="row out"><div class="bub">Женская стрижка<span class="t">21:58</span></div></div>
+    <div class="row in"><div class="bub">Как вас зовут?<span class="t">21:58</span></div></div>
+
+    <div class="row out"><div class="bub">Гриша<span class="t">21:59</span></div></div>
+    <div class="row in"><div class="bub">Оставьте телефон для подтверждения 📱<span class="t">21:59</span></div></div>
+
+    <div class="row out"><div class="bub">+7 999 123-45-67<span class="t">21:59</span></div></div>
+    <div class="row in"><div class="bub">На какой день и время вам удобно? Например: «завтра после 18:00».<span class="t">21:59</span></div></div>
+
+    <div class="row out"><div class="bub">завтра после 18:00<span class="t">22:00</span></div></div>
+    <div class="row in"><div class="bub">Готово! ✅ Заявка принята:
+• Услуга: Женская стрижка
+• Имя: Гриша
+• Телефон: +7 999 123-45-67
+• Желаемое время: завтра после 18:00
+
+Администратор подтвердит запись и напишет вам. Спасибо! 🌿<span class="t">22:00</span></div></div>
+  </div>
+
+  <div class="kb">
+    <div class="btn wide">📅 Записаться</div>
+    <div class="btn">💇 Услуги и цены</div>
+    <div class="btn">🕒 Часы работы</div>
+    <div class="btn wide">📍 Адрес</div>
+  </div>
+  <div class="composer">
+    <span class="ico">😊</span>
+    <span class="field">Сообщение</span>
+    <span class="ico">📎</span>
+    <span class="ico">🎤</span>
+  </div>
+</div>
+</body>
+</html>
