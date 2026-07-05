@@ -1,0 +1,16 @@
+# секреты и окружение
+.env
+.venv/
+venv/
+
+# python
+__pycache__/
+*.pyc
+
+# данные рантайма
+data/bookings.db
+
+# ос/редакторы
+.DS_Store
+.idea/
+.vscode/
