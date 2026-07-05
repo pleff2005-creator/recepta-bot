@@ -44,6 +44,27 @@ class BookingForm(StatesGroup):
     time = State()
 
 
+# Слова-намерения «записаться» в свободном тексте (запиши/записаться/бронь…).
+_BOOK_WORDS = ("запиш", "записа", "запис", "забронир", "бронир", "хочу на ")
+# …но не про перенос/отмену/«без записи» — их не превращаем в запись.
+_NOT_BOOK = ("перенес", "отмен", "без запис")
+
+
+def _is_booking_intent(text: str) -> bool:
+    low = text.lower()
+    if any(w in low for w in _NOT_BOOK):
+        return False
+    return any(w in low for w in _BOOK_WORDS)
+
+
+async def _start_booking(message: Message, state: FSMContext) -> None:
+    await state.set_state(BookingForm.service)
+    services = ", ".join(load_kb().service_names())
+    await message.answer(
+        f"Отлично! На какую услугу записать?\nНапример: {services}.\n\n(«отмена» — выйти)"
+    )
+
+
 def _remember(uid: int, role: str, text: str) -> None:
     hist = _history.setdefault(uid, [])
     hist.append({"role": role, "content": text})
@@ -88,11 +109,7 @@ async def show_address(message: Message) -> None:
 
 @router.message(F.text == BTN_BOOK)
 async def book_start(message: Message, state: FSMContext) -> None:
-    await state.set_state(BookingForm.service)
-    services = ", ".join(load_kb().service_names())
-    await message.answer(
-        f"Отлично! На какую услугу записать?\nНапример: {services}.\n\n(«отмена» — выйти)"
-    )
+    await _start_booking(message, state)
 
 
 @router.message(BookingForm.service, F.text)
@@ -165,9 +182,16 @@ async def _notify_owner(message: Message, booking: Booking, booking_id: int) -> 
 # --------------------------- свободный диалог ---------------------------
 
 @router.message(StateFilter(None), F.text)
-async def free_chat(message: Message) -> None:
+async def free_chat(message: Message, state: FSMContext) -> None:
     uid = message.from_user.id
     text = message.text.strip()
+
+    # 0) намерение записаться прямо текстом («запиши», «хочу записаться») → воронка
+    if _is_booking_intent(text):
+        _history.pop(uid, None)
+        await _start_booking(message, state)
+        return
+
     _remember(uid, "user", text)
 
     # 1) живой ответ Claude (если задан ключ) — строго по базе знаний
